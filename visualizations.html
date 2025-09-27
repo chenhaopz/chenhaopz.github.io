@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization Portfolio - Chenhao Zhang</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header and Navigation -->
+    <header>
+        <nav>
+            <div class="logo">Chenhao Zhang</div>
+            <ul class="nav-links">
+                <li><a href="index.html">About</a></li>
+                <li><a href="visualizations.html">Visualization Portfolio</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Page Title -->
+    <section class="content-section">
+        <div class="content-item">
+            <h2>Visualization Portfolio</h2>
+        </div>
+    </section>
+
+    <!-- Bar Chart Visualization -->
+    <section class="content-section">
+        <div class="content-item">
+            <h3>Bar Chart: Product Design Skills Assessment</h3>
+            <div class="flex-container">
+                <div class="text-content">
+                    <p>This bar chart represents my self-assessment across different product design skill areas. The visualization was created using SVG elements directly in HTML.</p>
+                    <p>The chart shows relative strength in areas like Prototyping and Material Design, with room for growth in User Research and CAD.</p>
+                </div>
+                <div class="chart-container">
+                    <svg width="400" height="300">
+                        <!-- Axes -->
+                        <line x1="50" y1="250" x2="350" y2="250" stroke="black" stroke-width="2" />
+                        <line x1="50" y1="250" x2="50" y2="50" stroke="black" stroke-width="2" />
+                        
+                        <!-- Bars -->
+                        <rect x="70" y="150" width="40" height="100" fill="#fedc3d">
+                            <title>Material Design: 8/10</title>
+                        </rect>
+                        <text x="90" y="145" text-anchor="middle" font-size="8">Material Design</text>
+                        
+                        <rect x="120" y="170" width="40" height="80" fill="#fedc3d">
+                            <title>Design Thinking: 7/10</title>
+                        </rect>
+                        <text x="140" y="165" text-anchor="middle" font-size="8">Design Thinking</text>
+                        
+                        <rect x="170" y="150" width="40" height="100" fill="#fedc3d">
+                            <title>Prototyping: 8/10</title>
+                        </rect>
+                        <text x="190" y="145" text-anchor="middle" font-size="8">Prototyping</text>
+                        
+                        <rect x="220" y="190" width="40" height="60" fill="#fedc3d">
+                            <title>CAD: 6/10</title>
+                        </rect>
+                        <text x="240" y="185" text-anchor="middle" font-size="8">CAD</text>
+                        
+                        <rect x="270" y="210" width="40" height="40" fill="#fedc3d">
+                            <title>User Research: 4/10</title>
+                        </rect>
+                        <text x="290" y="205" text-anchor="middle" font-size="8">User Research</text>
+                        
+                        <!-- Y-axis label -->
+                        <text x="30" y="150" text-anchor="middle" font-size="10" transform="rotate(-90, 30, 150)">Skill Level</text>
+                        
+                        <!-- X-axis label -->
+                        <text x="200" y="280" text-anchor="middle" font-size="10">Skill Areas</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Creative SVG Art -->
+    <section class="content-section">
+        <div class="content-item">
+            <h3>Interactive Circle Art</h3>
+            <div class="flex-container">
+                <div class="text-content">
+                    <p>This interactive artwork is composed entirely of circles. Each click randomly changes the colors and positions of the circles.</p>
+                    <p>The simplicity of using only circles demonstrates how basic shapes can create visually interesting patterns through randomization.</p>
+                </div>
+                <div class="art-container">
+                    <svg width="400" height="300" id="circle-art">
+                        <circle cx="100" cy="100" r="40" fill="#fedc3d" class="art-circle" />
+                        <circle cx="200" cy="150" r="60" fill="#fedc3d" class="art-circle" />
+                        <circle cx="300" cy="100" r="30" fill="#fedc3d" class="art-circle" />
+                        <circle cx="150" cy="200" r="25" fill="#fedc3d" class="art-circle" />
+                        <circle cx="250" cy="200" r="35" fill="#fedc3d" class="art-circle" />
+                        <circle cx="200" cy="80" r="20" fill="#fedc3d" class="art-circle" />
+                    </svg>
+                    <p class="instruction">Click on the artwork to randomize colors and positions</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="https://github.com/chenhaozhang" aria-label="GitHub">GitHub</a>
+            <a href="mailto:z18210582172@gmail.com" aria-label="Email">Email</a>
+        </div>
+    </footer>
+
+    <script src="vis.js"></script>
+</body>
+</html>

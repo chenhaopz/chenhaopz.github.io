@@ -138,3 +138,36 @@ footer {
 .social-links a:hover {
     color: #fedc3d;
 }
+
+/* Visualization page styles*/
+
+/* Flex container for visualization layout */
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* Chart and art containers */
+.chart-container,
+.art-container {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+/* Interactive SVG styling */
+#circle-art {
+    cursor: pointer;
+    border: 1px solid #efefef;
+    border-radius: 5px;
+}
+
+/* Instruction text */
+.instruction {
+    margin-top: 10px;
+    font-style: italic;
+    color: #666;
+    user-select: none; 
+}
