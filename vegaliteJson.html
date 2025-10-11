@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+<!-- Header and Navigation -->
+    <header>
+        <nav>
+            <div class="logo">Chenhao Zhang</div>
+            <ul class="nav-links">
+                <li><a href="index.html">About</a></li>
+                <li><a href="visualizations.html">Visualization Portfolio</a></li>
+                <li><a href="vegaliteJson.html">Assignment 3</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+      <div class="stats-container">
+        <h2>Video Game Sales Data Description</h2>
+        
+        <div class="variable-section">
+          <h3>1. Name: Categorical Variable</h3>
+          <div class="stat-item">
+            Total Game Records: <span id="name-count" class="stat-value"></span><br>
+            Unique Game Titles: <span id="name-unique" class="stat-value"></span>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>2. Platform: Categorical Variable</h3>
+          <div class="stat-item">
+            Most Frequent Platform: <span id="platform-mode" class="stat-value"></span><br>
+            Total Platforms: <span id="platform-count" class="stat-value"></span>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>3. Year: Discrete Numerical Variable</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <strong>Central Tendency:</strong><br>
+              Mean: <span id="year-mean" class="stat-value"></span><br>
+              Median: <span id="year-median" class="stat-value"></span><br>
+              Mode: <span id="year-mode" class="stat-value"></span>
+            </div>
+            <div class="stat-item">
+              <strong>Spread/Variability:</strong><br>
+              Range: <span id="year-range" class="stat-value"></span> years<br>
+              Standard Deviation: <span id="year-std" class="stat-value"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>4. Genre: Categorical Variable</h3>
+          <div class="stat-item">
+            Most Frequent Genre: <span id="genre-mode" class="stat-value"></span><br>
+            Total Genres: <span id="genre-count" class="stat-value"></span>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>5. Publisher: Categorical Variable</h3>
+          <div class="stat-item">
+            Most Frequent Publisher: <span id="publisher-mode" class="stat-value"></span><br>
+            Total Publishers: <span id="publisher-count" class="stat-value"></span>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>6. NA_Sales: Continuous Numerical Variable (millions of units)</h3>
+          <div class="total-sales">Total Sales: <span id="na-total" class="stat-value"></span> million</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <strong>Central Tendency:</strong><br>
+              Average NA Sales (Mean): <span id="na-mean" class="stat-value"></span> million<br>
+              Median: <span id="na-median" class="stat-value"></span> million<br>
+            </div>
+            <div class="stat-item">
+              <strong>Spread/Variability:</strong><br>
+              Range: <span id="na-range" class="stat-value"></span> million<br>
+              Standard Deviation: <span id="na-std" class="stat-value"></span> million
+            </div>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>7. EU_Sales: Continuous Numerical Variable (millions of units)</h3>
+          <div class="total-sales">Total Sales: <span id="eu-total" class="stat-value"></span> million</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <strong>Central Tendency:</strong><br>
+              Average EU Sales (Mean): <span id="eu-mean" class="stat-value"></span> million<br>
+              Median: <span id="eu-median" class="stat-value"></span> million<br>
+            </div>
+            <div class="stat-item">
+              <strong>Spread/Variability:</strong><br>
+              Range: <span id="eu-range" class="stat-value"></span> million<br>
+              Standard Deviation: <span id="eu-std" class="stat-value"></span> million
+            </div>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>8. JP_Sales: Continuous Numerical Variable (millions of units)</h3>
+          <div class="total-sales">Total Sales: <span id="jp-total" class="stat-value"></span> million</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <strong>Central Tendency:</strong><br>
+              Average JP Sales (Mean): <span id="jp-mean" class="stat-value"></span> million<br>
+              Median: <span id="jp-median" class="stat-value"></span> million<br>
+            </div>
+            <div class="stat-item">
+              <strong>Spread/Variability:</strong><br>
+              Range: <span id="jp-range" class="stat-value"></span> million<br>
+              Standard Deviation: <span id="jp-std" class="stat-value"></span> million
+            </div>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>9. Other_Sales: Continuous Numerical Variable (millions of units)</h3>
+          <div class="total-sales">Total Sales: <span id="other-total" class="stat-value"></span> million</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <strong>Central Tendency:</strong><br>
+              Average Other Sales (Mean): <span id="other-mean" class="stat-value"></span> million<br>
+              Median: <span id="other-median" class="stat-value"></span> million<br>
+            </div>
+            <div class="stat-item">
+              <strong>Spread/Variability:</strong><br>
+              Range: <span id="other-range" class="stat-value"></span> million<br>
+              Standard Deviation: <span id="other-std" class="stat-value"></span> million
+            </div>
+          </div>
+        </div>
+
+        <div class="variable-section">
+          <h3>10. Global_Sales: Continuous Numerical Variable (millions of units)</h3>
+          <div class="total-sales">Total Sales: <span id="global-total" class="stat-value"></span> million</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <strong>Central Tendency:</strong><br>
+              Average Global Sales (Mean): <span id="global-mean" class="stat-value"></span> million<br>
+              Median: <span id="global-median" class="stat-value"></span> million<br>
+            </div>
+            <div class="stat-item">
+              <strong>Spread/Variability:</strong><br>
+              Range: <span id="global-range" class="stat-value"></span> million<br>
+              Standard Deviation: <span id="global-std" class="stat-value"></span> million
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="view"></div>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="https://github.com/chenhaozhang" aria-label="GitHub">GitHub</a>
+            <a href="mailto:z18210582172@gmail.com" aria-label="Email">Email</a>
+        </div>
+    </footer>
+
+    <script src="vis3.js"></script>
+  </body>
+</html>

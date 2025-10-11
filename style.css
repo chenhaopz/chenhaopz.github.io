@@ -171,3 +171,44 @@ footer {
     color: #666;
     user-select: none; 
 }
+
+/* Assignment3 Describe the data */
+.stats-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.variable-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-left: 3px solid #fedc3d;
+  background-color: #efefef;
+}
+
+.variable-section h3 {
+  color: black;
+  margin-bottom: 1rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.stat-item {
+  padding: 0.5rem;
+}
+
+.stat-value {
+  font-weight: bold;
+  color: #555;
+}
+
+.total-sales {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: black;
+  padding: 8px;
+}
