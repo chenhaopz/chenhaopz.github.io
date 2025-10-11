@@ -30,7 +30,7 @@ async function render() {
   const view = await vegaEmbed("#view", vlSpec).view;
   view.run();
 }
-
+//Reference: https://observablehq.com/@d3/d3-mean-d3-median-and-friends 
 function calculateStatistics(data) {
   // Name Stats
   document.getElementById('name-count').textContent = data.length;
@@ -100,6 +100,7 @@ function calculateStatistics(data) {
   document.getElementById('global-std').textContent = d3.deviation(globalSales).toFixed(3);
 }
 
+//Reference: https://www.geeksforgeeks.org/dsa/mode/ 
 function getMode(array) {
   const frequency = {};
   let maxCount = 0;
