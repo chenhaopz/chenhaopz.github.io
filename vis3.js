@@ -1,8 +1,75 @@
-async function render() {
+// Global sales by genre and platform - Stacked Bar Chart
+async function renderGenrePlatformChart() {
   // Load data
   const data = await d3.csv("./dataset/videogames_wide.csv");
   
   // Convert numerical columns
+  data.forEach(d => {
+    d.Global_Sales = +d.Global_Sales;
+  });
+
+  // Create stacked bar chart using Vega-Lite
+  const vlSpec = {
+    $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+    description: "Global Sales by Genre and Platform",
+    data: { values: data },
+    mark: "bar",
+    encoding: {
+      x: {
+        field: "Genre",
+        type: "nominal",
+        title: "Game Genre",
+        axis: { labelAngle: 0 },
+      },
+      y: {
+        field: "Global_Sales",
+        type: "quantitative",
+        aggregate: "sum",
+        // Reference: https://vega.github.io/vega-lite/docs/axis.html 
+        axis: {
+          title: "Global Sales (millions of units)",
+          labels: false,  
+          ticks: false,   
+          domain: false   
+        }
+      },
+      color: {
+        field: "Platform",
+        type: "nominal",
+        title: "Platform",
+        scale: { scheme: "category20" },
+        //Reference: https://vega.github.io/vega-lite/docs/sort.html 
+        sort: { field: "Global_Sales", op: "sum", order: "ascending" },
+        legend: {
+          columns: 2,
+          symbolLimit: 0
+        }
+      },
+      order: {
+        field: "Global_Sales",
+        aggregate: "sum",
+        sort: "ascending"
+      },
+      tooltip: [
+        { field: "Genre", type: "nominal", title: "Genre" },
+        { field: "Platform", type: "nominal", title: "Platform" },
+        { field: "Global_Sales", aggregate: "sum", type: "quantitative", title: "Total Sales (millions)", format: ".3f" }
+      ]
+    },
+    width: 1000,
+    height: 800
+  };
+
+  // Embed the visualization with tooltip options
+  await vegaEmbed("#genre-platform-sales", vlSpec, options);
+}
+
+// Main render function that calls all visualizations
+async function render() {
+  // Load data for statistics
+  const data = await d3.csv("./dataset/videogames_wide.csv");
+  
+  // Convert numerical columns for statistics
   data.forEach(d => {
     d.Global_Sales = +d.Global_Sales;
     d.NA_Sales = +d.NA_Sales;
@@ -15,22 +82,14 @@ async function render() {
   // Calculate statistics
   calculateStatistics(data);
   
-  // Create visualization
-  const vlSpec = vl
-    .markBar()
-    .data(data)
-    .encode(
-      vl.y().fieldN("Platform").sort("-x"),
-      vl.x().fieldQ("Global_Sales").aggregate("sum")
-    )
-    .width("container")
-    .height(400)
-    .toSpec();
+  // Create the first visualization - Global Sales by Genre and Platform
+  await renderGenrePlatformChart();
 
-  const view = await vegaEmbed("#view", vlSpec).view;
+  const view = await vegaEmbed("#view", vlSpec, options).view;
   view.run();
 }
-//Reference: https://observablehq.com/@d3/d3-mean-d3-median-and-friends 
+
+// Reference: https://observablehq.com/@d3/d3-mean-d3-median-and-friends 
 function calculateStatistics(data) {
   // Name Stats
   document.getElementById('name-count').textContent = data.length;
@@ -100,7 +159,7 @@ function calculateStatistics(data) {
   document.getElementById('global-std').textContent = d3.deviation(globalSales).toFixed(3);
 }
 
-//Reference: https://www.geeksforgeeks.org/dsa/mode/ 
+// Reference: https://www.geeksforgeeks.org/dsa/mode/ 
 function getMode(array) {
   const frequency = {};
   let maxCount = 0;
