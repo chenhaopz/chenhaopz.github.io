@@ -1,4 +1,4 @@
-// Global sales by genre and platform - Stacked Bar Chart
+// Visualization 1 Global sales by genre and platform (Stacked Bar Chart)
 async function renderGenrePlatformChart() {
   // Load data
   const data = await d3.csv("./dataset/videogames_wide.csv");
@@ -8,8 +8,8 @@ async function renderGenrePlatformChart() {
     d.Global_Sales = +d.Global_Sales;
   });
 
-  // Create stacked bar chart using Vega-Lite
-  const vlSpec = {
+  // Create stacked bar chart
+  var vlSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
     description: "Global Sales by Genre and Platform",
     data: { values: data },
@@ -37,8 +37,9 @@ async function renderGenrePlatformChart() {
         field: "Platform",
         type: "nominal",
         title: "Platform",
-        scale: { scheme: "category20" },
-        //Reference: https://vega.github.io/vega-lite/docs/sort.html 
+        // Reference: https://vega.github.io/vega/docs/schemes/ 
+        scale: { scheme: "spectral" },
+        // Reference: https://vega.github.io/vega-lite/docs/sort.html 
         sort: { field: "Global_Sales", op: "sum", order: "ascending" },
         legend: {
           columns: 2,
@@ -64,6 +65,124 @@ async function renderGenrePlatformChart() {
   await vegaEmbed("#genre-platform-sales", vlSpec, options);
 }
 
+// Visualization 2 Combined Sales Trends by Platform and Genre (Faceted Line Charts)
+async function renderSalesTrendsCombined() {
+  // Load data
+  const data = await d3.csv("./dataset/videogames_wide.csv");
+  
+  // Convert numerical columns and filter valid years
+  const filteredData = data.filter(d => d.Year && d.Year !== 'N/A' && !isNaN(+d.Year)).map(d => {
+    return {
+      Year: +d.Year,
+      Platform: d.Platform,
+      Global_Sales: +d.Global_Sales,
+      Genre: d.Genre
+    };
+  });
+
+  // Create faceted line charts for platform and genre sales over time
+  var vlSpec = {
+    $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+    description: "Global Sales Trends by Platform and Genre",
+    data: { values: filteredData },
+    vconcat: [
+      // Top chart（Platform）
+      {
+        title: "Sales Trends by Platform Over Time",
+        mark: {
+          type: "line",
+          point: true
+        },
+        encoding: {
+          x: {
+            field: "Year",
+            type: "ordinal",
+            title: "Release Year",
+            axis: { 
+              labelAngle: -45,
+              format: "d"
+            }
+          },
+          y: {
+            field: "Global_Sales",
+            type: "quantitative",
+            aggregate: "sum",
+            title: "Total Global Sales (millions)"
+          },
+          color: {
+            field: "Platform",
+            type: "nominal",
+            title: "Platform",
+            scale: { scheme: "spectral" },
+            legend: {
+              columns: 2,
+              symbolLimit: 0
+            }
+          },
+          tooltip: [
+            { field: "Year", type: "ordinal", title: "Year" },
+            { field: "Platform", type: "nominal", title: "Platform" },
+            { field: "Global_Sales", aggregate: "sum", type: "quantitative", title: "Total Sales (millions)", format: ".3f" }
+          ]
+        },
+        width: 1000,
+        height: 300
+      },
+      // Bottom chart（Genre）
+      {
+        title: "Sales Trends by Genre Over Time",
+        mark: {
+          type: "line",
+          point: true
+        },
+        encoding: {
+          x: {
+            field: "Year",
+            type: "ordinal",
+            title: "Release Year",
+            axis: { 
+              labelAngle: -45,
+              format: "d"
+            }
+          },
+          y: {
+            field: "Global_Sales",
+            type: "quantitative",
+            aggregate: "sum",
+            title: "Total Global Sales (millions)"
+          },
+          color: {
+            field: "Genre",
+            type: "nominal",
+            title: "Game Genre",
+            scale: { scheme: "redyellowgreen" }
+          },
+          tooltip: [
+            { field: "Year", type: "ordinal", title: "Year" },
+            { field: "Genre", type: "nominal", title: "Genre" },
+            { field: "Global_Sales", aggregate: "sum", type: "quantitative", title: "Total Sales (millions)", format: ".3f" }
+          ]
+        },
+        width: 1000,
+        height: 350
+      }
+    ]
+  };
+
+  // Embed the visualization
+  await vegaEmbed("#sales-trends-combined", vlSpec, options);
+}
+
+// Visualization 3
+async function renderRegionalSalesComparison() {
+
+}
+
+// Visualization 4
+async function renderTopPublishers() {
+
+}
+
 // Main render function that calls all visualizations
 async function render() {
   // Load data for statistics
@@ -82,11 +201,11 @@ async function render() {
   // Calculate statistics
   calculateStatistics(data);
   
-  // Create the first visualization - Global Sales by Genre and Platform
+  // Create the first visualization
   await renderGenrePlatformChart();
-
-  const view = await vegaEmbed("#view", vlSpec, options).view;
-  view.run();
+  
+  // Create the second visualization
+  await renderSalesTrendsCombined();
 }
 
 // Reference: https://observablehq.com/@d3/d3-mean-d3-median-and-friends 
