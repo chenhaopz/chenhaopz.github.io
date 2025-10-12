@@ -173,11 +173,74 @@ async function renderSalesTrendsCombined() {
   await vegaEmbed("#sales-trends-combined", vlSpec, options);
 }
 
-// Visualization 3
+// Visualization 3 Regional Sales by Platform (Stacked Bar Charts)
 async function renderRegionalSalesComparison() {
+  // Load data
+  const data = await d3.csv("./dataset/videogames_wide.csv");
+  
+  // Convert numerical columns and create long format data
+  let regionalData = [];
+  // Reference: https://jonathansoma.com/tutorials/d3/wide-vs-long-data/ 
+  data.forEach(d => {
+    regionalData.push({ Platform: d.Platform, Region: "North America", Sales: +d.NA_Sales });
+    regionalData.push({ Platform: d.Platform, Region: "Europe", Sales: +d.EU_Sales });
+    regionalData.push({ Platform: d.Platform, Region: "Japan", Sales: +d.JP_Sales });
+    regionalData.push({ Platform: d.Platform, Region: "Other Regions", Sales: +d.Other_Sales });
+  });
 
+  // Create stacked bar chart with platform as color
+  var vlSpec = {
+    $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+    description: "Regional Sales by Platform",
+    data: { values: regionalData },
+    mark: "bar",
+    encoding: {
+      x: {
+        field: "Region",
+        type: "nominal",
+        title: "Region",
+        axis: { labelAngle: 0 }
+      },
+      y: {
+        field: "Sales",
+        type: "quantitative",
+        aggregate: "sum",
+        axis: {
+          title: "Sales (millions of units)",
+          labels: false,  
+          ticks: false,   
+          domain: false   
+        }
+      },
+      color: {
+        field: "Platform",
+        type: "nominal",
+        title: "Platform",
+        scale: { scheme: "spectral" },
+        sort: { field: "Sales", op: "sum", order: "ascending" },
+        legend: {
+          columns: 2,
+          symbolLimit: 0
+        }
+      },
+      order: {
+        field: "Sales",
+        aggregate: "sum",
+        sort: "ascending"
+      },
+      tooltip: [
+        { field: "Region", type: "nominal", title: "Region" },
+        { field: "Platform", type: "nominal", title: "Platform" },
+        { field: "Sales", aggregate: "sum", type: "quantitative", title: "Total Sales (millions)", format: ".3f" }
+      ]
+    },
+    width: 800,
+    height: 500
+  };
+
+  // Embed the visualization
+  await vegaEmbed("#regional-sales-comparison", vlSpec, options);
 }
-
 // Visualization 4
 async function renderTopPublishers() {
 
@@ -189,6 +252,7 @@ async function render() {
   const data = await d3.csv("./dataset/videogames_wide.csv");
   
   // Convert numerical columns for statistics
+  // Reference: http://learnjsdata.com/read_data.html 
   data.forEach(d => {
     d.Global_Sales = +d.Global_Sales;
     d.NA_Sales = +d.NA_Sales;
@@ -206,6 +270,9 @@ async function render() {
   
   // Create the second visualization
   await renderSalesTrendsCombined();
+  
+  // Create the third visualization
+  await renderRegionalSalesComparison();
 }
 
 // Reference: https://observablehq.com/@d3/d3-mean-d3-median-and-friends 
