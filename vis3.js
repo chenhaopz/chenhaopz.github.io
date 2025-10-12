@@ -61,7 +61,6 @@ async function renderGenrePlatformChart() {
     height: 800
   };
 
-  // Embed the visualization with tooltip options
   await vegaEmbed("#genre-platform-sales", vlSpec, options);
 }
 
@@ -70,7 +69,7 @@ async function renderSalesTrendsCombined() {
   // Load data
   const data = await d3.csv("./dataset/videogames_wide.csv");
   
-  // Convert numerical columns and filter valid years
+  // Convert numerical columns and filter years
   const filteredData = data.filter(d => d.Year && d.Year !== 'N/A' && !isNaN(+d.Year)).map(d => {
     return {
       Year: +d.Year,
@@ -100,6 +99,7 @@ async function renderSalesTrendsCombined() {
             title: "Release Year",
             axis: { 
               labelAngle: -45,
+              // Reference: https://d3js.org/d3-format 
               format: "d"
             }
           },
@@ -169,7 +169,6 @@ async function renderSalesTrendsCombined() {
     ]
   };
 
-  // Embed the visualization
   await vegaEmbed("#sales-trends-combined", vlSpec, options);
 }
 
@@ -178,7 +177,7 @@ async function renderRegionalSalesComparison() {
   // Load data
   const data = await d3.csv("./dataset/videogames_wide.csv");
   
-  // Convert numerical columns and create long format data
+  // Convert numerical columns
   let regionalData = [];
   // Reference: https://jonathansoma.com/tutorials/d3/wide-vs-long-data/ 
   data.forEach(d => {
@@ -238,12 +237,98 @@ async function renderRegionalSalesComparison() {
     height: 500
   };
 
-  // Embed the visualization
   await vegaEmbed("#regional-sales-comparison", vlSpec, options);
 }
-// Visualization 4
-async function renderTopPublishers() {
 
+// Visualization 4 Game Release Year vs Global Sales by Genre (Scatter Plot)
+async function renderYearSalesScatter() {
+  // Load data
+  const data = await d3.csv("./dataset/videogames_wide.csv");
+  
+  // Convert numerical columns and filter years
+  const filteredData = data.filter(d => 
+    d.Year && d.Year !== 'N/A' && !isNaN(+d.Year) && +d.Global_Sales > 0
+  ).map(d => {
+    return {
+      Year: +d.Year, 
+      Global_Sales: +d.Global_Sales,
+      Genre: d.Genre,
+      Platform: d.Platform,
+      Name: d.Name,
+      Publisher: d.Publisher
+    };
+  });
+
+  // Create scatter plot between release year and global sales
+  var vlSpec = {
+    $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+    description: "Game Release Year vs Global Sales by Genre",
+    data: { values: filteredData },
+    mark: {
+      type: "point",
+      filled: true,
+      opacity: 0.7,
+      size: 100
+    },
+    encoding: {
+      x: {
+        field: "Year",
+        type: "ordinal",  
+        title: "Release Year",
+        axis: { 
+          format: "d", 
+          labelAngle: -45
+        }
+      },
+      y: {
+        field: "Global_Sales",
+        type: "quantitative",
+        title: "Global Sales (millions of units)",
+        // Reference: https://vega.github.io/vega-lite/docs/scale.html#log 
+        scale: { type: "log" }
+      },
+      color: {
+        field: "Genre",
+        type: "nominal",
+        title: "Game Genre",
+        scale: { scheme: "category20" },
+        legend: {
+          columns: 2,
+          symbolLimit: 0
+        }
+      },
+      size: {
+        field: "Global_Sales",
+        type: "quantitative",
+        title: "Sales (millions)",
+        legend: null
+      },
+      tooltip: [
+        { field: "Name", type: "nominal", title: "Game Title" },
+        { field: "Year", type: "ordinal", title: "Release Year" },
+        { field: "Genre", type: "nominal", title: "Genre" },
+        { field: "Platform", type: "nominal", title: "Platform" },
+        { field: "Publisher", type: "nominal", title: "Publisher" },
+        { field: "Global_Sales", type: "quantitative", title: "Global Sales (millions)", format: ".3f" }
+      ]
+    },
+    width: 1000,
+    height: 700,
+    // Reference: https://vega.github.io/vega-lite/docs/selection.html
+    selection: {
+      genre_select: {
+        type: "multi",
+        fields: ["Genre"],
+        bind: "legend"
+      }
+    },
+    transform: [
+      { filter: { selection: "genre_select" } }
+    ]
+  };
+
+  // Embed the visualization
+  await vegaEmbed("#year-sales-scatter", vlSpec, options);
 }
 
 // Main render function that calls all visualizations
@@ -273,6 +358,9 @@ async function render() {
   
   // Create the third visualization
   await renderRegionalSalesComparison();
+  
+  // Create the fourth visualization
+  await renderYearSalesScatter();
 }
 
 // Reference: https://observablehq.com/@d3/d3-mean-d3-median-and-friends 
