@@ -259,7 +259,7 @@ async function renderYearSalesScatter() {
     };
   });
 
-  // Create scatter plot between release year and global sales
+  // Create scatter plot for visualization 4
   var vlSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
     description: "Game Release Year vs Global Sales by Genre",
@@ -327,7 +327,6 @@ async function renderYearSalesScatter() {
     ]
   };
 
-  // Embed the visualization
   await vegaEmbed("#year-sales-scatter", vlSpec, options);
 }
 
